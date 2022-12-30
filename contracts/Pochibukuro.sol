@@ -7,8 +7,17 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Pochibukuro is ERC721, Ownable {
   string baseURI;
+  address immutable public designer;
+  address immutable public programmer;
+  uint256 private constant _FEE = 0.0005 ether;
 
-  constructor() ERC721("Pochibukuro", "PCBKR") {}
+  constructor(
+    address _designer,
+    address _programmer
+  ) ERC721("Pochibukuro", "PCBKR") {
+    designer = _designer;
+    programmer = _programmer;
+  }
 
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
@@ -19,10 +28,15 @@ contract Pochibukuro is ERC721, Ownable {
   }
 
   function otoshidama(address _destination) payable external {
-    require(msg.value >= 0.002 ether, "0.002 ether required");
+    require(msg.value >= _FEE * 4, "More ether required");
+
+    address payable designerAddress = payable(designer);
+    address payable programmerAddress = payable(programmer);
+    designerAddress.transfer(_FEE);
+    programmerAddress.transfer(_FEE);
 
     address payable destination = payable(_destination);
-    destination.transfer(msg.value);
+    destination.transfer(msg.value - _FEE * 2);
 
     uint256 tokenId = totalSupply() + 1;
     _safeMint(_destination, tokenId);
