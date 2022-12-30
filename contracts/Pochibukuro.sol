@@ -17,4 +17,14 @@ contract Pochibukuro is ERC721, Ownable {
   function setBaseURI(string memory _newBaseURI) external onlyOwner {
     baseURI = _newBaseURI;
   }
+
+  function otoshidama(address _destination) payable external {
+    require(msg.value >= 0.002 ether, "0.002 ether required");
+
+    address payable destination = payable(_destination);
+    destination.transfer(msg.value);
+
+    uint256 tokenId = totalSupply() + 1;
+    _safeMint(_destination, tokenId);
+  }
 }
