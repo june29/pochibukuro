@@ -4,8 +4,9 @@ pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract PochiBukuro is ERC721, Ownable {
   using Counters for Counters.Counter;
@@ -36,8 +37,8 @@ contract PochiBukuro is ERC721, Ownable {
             abi.encodePacked(
               '{"name":"', tokenName(_tokenId),
                 '","description":"Otoshidama in Pochi Bukuro',
-                '","attributes":[{"trait_type":"Pattern","value":"', pattern.toString(), '"}',
-                '],"image":"https://june29.github.io/pochibukuro/', pattern.toString(), '.png',
+                '","attributes":[{"trait_type":"Pattern","value":"', Strings.toString(pattern), '"}',
+                '],"image":"https://june29.github.io/pochibukuro/', Strings.toString(pattern), '.png',
               '"}'
             )
           )
@@ -47,7 +48,7 @@ contract PochiBukuro is ERC721, Ownable {
   }
 
   function tokenName(uint256 _tokenId) internal pure returns(string memory) {
-    return string(abi.encodePacked("Pochi Bukuro #", _tokenId.toString()));
+    return string(abi.encodePacked("Pochi Bukuro #", Strings.toString(_tokenId)));
   }
 
   function otoshidama(address _destination) payable external {
