@@ -1,22 +1,17 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const PochibukuroContract = await ethers.getContractFactory("Pochibukuro");
+  const Pochibukuro = await PochibukuroContract.deploy(
+    "0x14Aea32f6E6dCAecFA1BC62776b2e279Db09255d", // chanoha.eth
+    "0xc66d779B340E333bA696B2b3687FB4Bca1Eb7D0b"  // june29.eth
+  );
 
-  const lockedAmount = ethers.utils.parseEther("1");
+  await Pochibukuro.deployed();
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
+  console.log(`Deployed to ${Pochibukuro.address}`);
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
