@@ -4,12 +4,16 @@ pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract Pochibukuro is ERC721, Ownable {
+  using Counters for Counters.Counter;
+
   string baseURI;
   address immutable public designer;
   address immutable public programmer;
   uint256 private constant _FEE = 0.0005 ether;
+  Counters.Counter private _tokenIdCounter;
 
   constructor(
     address _designer,
@@ -38,7 +42,8 @@ contract Pochibukuro is ERC721, Ownable {
     address payable destination = payable(_destination);
     destination.transfer(msg.value - _FEE * 2);
 
-    uint256 tokenId = totalSupply() + 1;
+    uint256 tokenId = _tokenIdCounter.current();
     _safeMint(_destination, tokenId);
+    _tokenIdCounter.increment();
   }
 }
