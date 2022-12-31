@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract PochiBukuro is ERC721, Ownable {
   using Counters for Counters.Counter;
 
-  string baseURI;
   address immutable public designer;
   address immutable public programmer;
   uint256 private constant _FEE = 0.0005 ether;
@@ -21,14 +20,6 @@ contract PochiBukuro is ERC721, Ownable {
   ) ERC721("Pochi Bukuro", "PB") {
     designer = _designer;
     programmer = _programmer;
-  }
-
-  function _baseURI() internal view virtual override returns (string memory) {
-    return baseURI;
-  }
-
-  function setBaseURI(string memory _newBaseURI) external onlyOwner {
-    baseURI = _newBaseURI;
   }
 
   function otoshidama(address _destination) payable external {
