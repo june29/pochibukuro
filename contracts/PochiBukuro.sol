@@ -46,7 +46,7 @@ contract PochiBukuro is ERC721, Ownable {
     );
   }
 
-  function tokenName(uint256 _tokenId) internal pure override returns(string memory) {
+  function tokenName(uint256 _tokenId) internal pure returns(string memory) {
     return string(abi.encodePacked("Pochi Bukuro #", _tokenId.toString()));
   }
 
