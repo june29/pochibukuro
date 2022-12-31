@@ -13,6 +13,9 @@ const config: HardhatUserConfig = {
       url: process.env.ALCHEMY_API_HTTPS_ENDPOINT_MAINNET,
       accounts: [process.env.ETHEREUM_WALLET_PRIVATE_KEY]
     }
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY
   }
 };
 
