@@ -4,12 +4,13 @@ pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract PochiBukuro is ERC721, Ownable {
   using Counters for Counters.Counter;
 
-  string baseURI;
   address immutable public designer;
   address immutable public programmer;
   uint256 private constant _FEE = 0.0005 ether;
@@ -23,12 +24,31 @@ contract PochiBukuro is ERC721, Ownable {
     programmer = _programmer;
   }
 
-  function _baseURI() internal view virtual override returns (string memory) {
-    return baseURI;
+  function tokenURI(uint256 _tokenId) public view override returns (string memory) {
+    require(_exists(_tokenId), "Non-existent Token ID");
+
+    uint8 pattern = (_tokenId % 20) == 0 ? 9 : uint8(_tokenId % 4);
+
+    return string(
+      abi.encodePacked(
+        'data:application/json;base64,',
+        Base64.encode(
+          bytes(
+            abi.encodePacked(
+              '{"name":"', tokenName(_tokenId),
+                '","description":"Otoshidama in Pochi Bukuro',
+                '","attributes":[{"trait_type":"Pattern","value":"', Strings.toString(pattern), '"}',
+                '],"image":"https://june29.github.io/pochibukuro/', Strings.toString(pattern), '.png',
+              '"}'
+            )
+          )
+        )
+      )
+    );
   }
 
-  function setBaseURI(string memory _newBaseURI) external onlyOwner {
-    baseURI = _newBaseURI;
+  function tokenName(uint256 _tokenId) internal pure returns(string memory) {
+    return string(abi.encodePacked("Pochi Bukuro #", Strings.toString(_tokenId)));
   }
 
   function otoshidama(address _destination) payable external {
